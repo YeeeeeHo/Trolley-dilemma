@@ -3,9 +3,9 @@ import shutil
 import random
 
 # 예시 폴더 경로
-input_folder = "/User/sih-yeho/Desktop/KW/2/2-2/논사/Trolley-dilemma/image"
-output_left_folder = "../left_folder"
-output_right_folder = "../right_folder"
+input_folder = "../Trolley-dilemma/iamge"
+output_left_folder = "../Trolley-dilemma/left_folder"
+output_right_folder = "../Trolley-dilemma/right_folder"
 
 # 이미지에 숫자를 부여하고 해당 카테고리의 폴더로 이동
 for filename in os.listdir(input_folder):
