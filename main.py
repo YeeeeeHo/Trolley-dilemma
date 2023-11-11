@@ -1,6 +1,3 @@
-import os
-import shutil
-import random
 from set import classify_images  # set.py에서 classify_images 함수를 import
 
 # 예시 폴더 경로
