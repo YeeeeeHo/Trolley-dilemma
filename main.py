@@ -1,73 +1,43 @@
-import numpy as np
-import tensorflow as tf
-from tensorflow import keras
+import os
+import shutil
+import random
 
-# 보상 구조 정의
-REWARDS = {
-    "forward": 1,  # 직진 보상
-    "collision": -10,  # 충돌 시 패널티
-    "wrong_direction": -5  # 올바르지 않은 방향으로 이동할 때 패널티
-}
+# 예시 폴더 경로
+input_folder = "/User/sih-yeho/Desktop/KW/2/2-2/논사/Trolley-dilemma/image"
+output_left_folder = "../left_folder"
+output_right_folder = "../right_folder"
 
-# 강화 학습 환경 클래스
-class Environment:
-    def __init__(self):
-        self.state = np.random.rand(5)  # 초기 상태
+# 이미지에 숫자를 부여하고 해당 카테고리의 폴더로 이동
+for filename in os.listdir(input_folder):
+    if filename.endswith(".jpg") or filename.endswith(".png"):
+        img_path = os.path.join(input_folder, filename)
 
-    def step(self, action):
-        if action == 0:  # 직진
-            reward = REWARDS["forward"]
-        elif action == 1:  # 좌회전
-            reward = REWARDS["wrong_direction"]
-        else:  # 정지
-            reward = REWARDS["collision"]
+        # 파일명에서 번호와 카테고리 추출
+        try:
+            number, category = filename.split('_')
+            number = int(number)
+        except ValueError:
+            continue  # 형식에 맞지 않는 파일은 무시
 
-        # 다음 상태 업데이트
-        next_state = np.random.rand(5)  # 임의의 상태
-        done = (reward == REWARDS["collision"])  # 충돌 시 에피소드 종료
+        # 이미지에 숫자를 부여하고 해당 카테고리의 폴더로 이동
+        new_filename = f"{number}_{category}"
+        new_img_path = os.path.join(input_folder, new_filename)
+        os.rename(img_path, new_img_path)
 
-        return next_state, reward, done
+# 무작위로 왼쪽 또는 오른쪽 갈림길로 이미지 이동
+for category in os.listdir(input_folder):
+    input_category_folder = os.path.join(input_folder, category)
 
-# 강화 학습 모델 정의
-model = keras.Sequential([
-    keras.layers.Dense(64, activation='relu', input_shape=(5,)),
-    keras.layers.Dense(64, activation='relu'),
-    keras.layers.Dense(3, activation='softmax')  # 3가지 행동: 직진, 좌회전, 정지
-])
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    if os.path.isdir(input_category_folder):
+        for filename in os.listdir(input_category_folder):
+            img_path = os.path.join(input_category_folder, filename)
 
-# 강화 학습 루프
-# 강화 학습 루프
-env = Environment()
-num_episodes = 1000
-for episode in range(num_episodes):
-    state = env.state
-    done = False
+            # 무작위로 왼쪽 또는 오른쪽 갈림길로 분류
+            output_folder = output_left_folder if random.choice([True, False]) else output_right_folder
 
-    while not done:
-        action_probs = model.predict(np.array([state]))
-        action = np.argmax(action_probs)
+            # 해당 카테고리의 폴더에 이미지 복사
+            output_category_folder = os.path.join(output_folder, category)
+            os.makedirs(output_category_folder, exist_ok=True)
+            shutil.copy(img_path, os.path.join(output_category_folder, filename))
 
-        next_state, reward, done = env.step(action)
-
-        # 강화 학습 모델 업데이트
-        target = np.zeros((1, 3))
-        target[0][action] = 1
-        model.fit(np.array([state]), target, epochs=1, verbose=0)
-
-        # 상태 업데이트
-        state = next_state
-
-    print(f"에피소드 {episode + 1} 완료")
-
-
-# 학습된 모델 테스트
-test_state = np.random.rand(5)  # 테스트를 위한 임의의 상태
-action_probs = model.predict(np.array([test_state]))
-action = np.argmax(action_probs)
-if action == 0:
-    print("자동차가 직진합니다.")
-elif action == 1:
-    print("자동차가 좌회전합니다.")
-else:
-    print("자동차가 정지합니다.")
+print("이미지 분류가 완료되었습니다.")
