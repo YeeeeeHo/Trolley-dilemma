@@ -3,10 +3,7 @@ import shutil
 import random
 
 # 예시 폴더 경로
-input_folder = "../Trolley-dilemma/image"
-output_left_folder = "../Trolley-dilemma/left_folder"
-output_right_folder = "../Trolley-dilemma/right_folder"
-auv_folder = "../Trolley-dilemma/AUV"
+
 def classify_images(input_folder, output_left_folder, output_right_folder,auv_folder):
 # 이미지를 무작위로 왼쪽 갈림길 또는 오른쪽 갈림길로 이동
     for filename in os.listdir(input_folder):
@@ -38,6 +35,5 @@ def classify_images(input_folder, output_left_folder, output_right_folder,auv_fo
                 # 선택된 갈림길에 이미지 복사
                 new_img_path = os.path.join(selected_folder, filename)
                 shutil.copy(img_path, new_img_path)
-classify_images(input_folder, output_left_folder, output_right_folder, auv_folder)
 
 print("이미지 분류가 완료되었습니다.")
