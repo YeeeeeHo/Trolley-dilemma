@@ -29,14 +29,14 @@ def classify_images(input_folder, output_left_folder, output_right_folder,auv_fo
             
             
             # 무작위로 이미지 개수 부여 (최대 5명까지)
-            max_people_in_folder = random.randint(num_people_in_folder, 5)
+            max_people_in_folder = random.randint(0, 5)
 
             if num_people_in_folder < max_people_in_folder:
                 # 새로운 이미지 파일 이름 생성
-                new_filename = f"{num_people_in_folder + 1}_{filename}"
+                #new_filename = f"{num_people_in_folder + 1}_{filename}"
 
                 # 선택된 갈림길에 이미지 복사
-                new_img_path = os.path.join(selected_folder, new_filename)
+                new_img_path = os.path.join(selected_folder, filename)
                 shutil.copy(img_path, new_img_path)
 classify_images(input_folder, output_left_folder, output_right_folder, auv_folder)
 
