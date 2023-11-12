@@ -15,14 +15,17 @@ def autonomous_vehicle_decision(left_images, right_images, auv_images):
     num_auv = len(auv_images)
 
     # 트롤리 딜레마 결정
-    if num_left > num_right:
+    if num_left > num_right and num_left > num_auv:
         decision = "Go to right"
-    elif num_left < num_right:
+    elif num_left < num_right and num_right > num_auv:
         decision = "Go to left"
+    elif num_auv > num_left and num_auv > num_right:
+        decision = "Go to the safest route considering passengers in the vehicle"
     else:
         decision = "No specific decision"
 
-    return decision
+    return decision 
+
 
 # 예시 폴더 경로
 input_folder = "../Trolley-dilemma/image"
