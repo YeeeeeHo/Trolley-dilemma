@@ -25,17 +25,38 @@ def autonomous_vehicle_decision(left_images, right_images, auv_images):
     weight_patient = 0.3
 
     # 각 상황에 대한 가중치 계산
-    weight_left = -(num_left + weight_child * calculate_weight(left_images, 'child') + weight_grand * calculate_weight(left_images, 'grand') + weight_patient * calculate_weight(left_images, 'patient'))
-    weight_right = -(num_right + weight_child * calculate_weight(right_images, 'child') + weight_grand * calculate_weight(right_images, 'grand') + weight_patient * calculate_weight(right_images, 'patient'))
-    weight_auv = -(num_auv + weight_child * calculate_weight(auv_images, 'child') + weight_grand * calculate_weight(auv_images, 'grand') + weight_patient * calculate_weight(auv_images, 'patient'))
+    weight_left = -(num_left + weight_child * calculate_weight(left_images, 'child') + 
+                    weight_grand * calculate_weight(left_images, 'grand') + 
+                    weight_patient * calculate_weight(left_images, 'patient'))
+
+    weight_right = -(num_right + weight_child * calculate_weight(right_images, 'child') + 
+                     weight_grand * calculate_weight(right_images, 'grand') + 
+                     weight_patient * calculate_weight(right_images, 'patient'))
+
+    weight_auv = -(num_auv + weight_child * calculate_weight(auv_images, 'child') + 
+                   weight_grand * calculate_weight(auv_images, 'grand') + 
+                   weight_patient * calculate_weight(auv_images, 'patient'))
+
+    weight_wall = (num_auv + weight_child * calculate_weight(auv_images, 'child') + 
+                  weight_grand * calculate_weight(auv_images, 'grand') + 
+                  weight_patient * calculate_weight(auv_images, 'patient'))
 
     # 길 위의 사람과 차 안의 사람을 비교하여 트롤리 딜레마 결정
-    if weight_auv > max(weight_left, weight_right):
-        decision = 'Go to the safest route considering passengers in the vehicle'
-    elif weight_left > weight_right:
-        decision = 'Go to left'
+    if 'wall' in left_images or 'wall' in right_images:
+        if weight_wall > weight_auv:
+            decision = 'Go to wall'
+        else:
+            decision = 'Go to autonomous vehicle'
     else:
-        decision = 'Go to right'
+        if weight_auv > max(weight_left, weight_right):
+            if weight_left > weight_right:
+                decision = 'Go to left'
+            else:
+                decision = 'Go to right'
+        elif weight_left > weight_right:
+            decision = 'Go to left'
+        else:
+            decision = 'Go to right'
 
     return decision
 
