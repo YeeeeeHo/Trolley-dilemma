@@ -27,9 +27,6 @@ def calculate_weight(images, keywords_weights):
     return total_weight, keyword_weights
 
 def autonomous_vehicle_decision(left_images, right_images, auv_images):
-    # 각 상황의 인원 수
-    num_auv = len(auv_images)
-
     # 키워드 및 가중치 정의
     keywords_weights = {
         'child': 1.3,
