@@ -57,9 +57,9 @@ def autonomous_vehicle_decision(left_images, right_images, auv_images):
             weight_right = weight_auv  # 오른쪽 갈림길의 가중치를 벽 쪽 갈림길의 가중치로 설정
 
         if weight_auv > weight_right:
-            decision = '오른쪽으로 이동'
+            decision = 'Go Right'
         else:
-            decision = '왼쪽으로 이동'
+            decision = 'Go Left'
     else:
         # 'wall.jpg'가 없는 경우
         weight_left, keyword_weights_left = calculate_weight(left_images, keywords_weights)  # 왼쪽 갈림길의 가중치 계산
@@ -67,13 +67,13 @@ def autonomous_vehicle_decision(left_images, right_images, auv_images):
 
         if weight_auv > max(weight_left, weight_right):
             if weight_left < weight_right:
-                decision = '왼쪽으로 이동'
+                decision = 'Go Left'
             else:
-                decision = '오른쪽으로 이동'
+                decision = 'Go Right'
         elif weight_left < weight_right:
-            decision = '왼쪽으로 이동'
+            decision = 'Go Left'
         else:
-            decision = '오른쪽으로 이동'
+            decision = 'Go Right'
 
     return decision, weight_left, weight_right, weight_auv, keyword_weights_left, keyword_weights_right, keyword_weights_auv
 
