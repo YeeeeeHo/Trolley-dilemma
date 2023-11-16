@@ -27,7 +27,7 @@ def classify_images(input_folder, output_left_folder, output_right_folder, auv_f
                 num_people_in_folder = len(os.listdir(selected_folder))
 
                 # 무작위로 이미지 개수 부여 (최대 5명까지)
-                max_people_in_folder = random.randint(0, 5)
+                max_people_in_folder = random.randint(1, 5)  # 1~5명으로 수정
 
                 if selected_folder == auv_folder:
                     # 이미지가 어린이인지 확인
